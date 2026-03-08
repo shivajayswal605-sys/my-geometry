@@ -33,6 +33,7 @@ export const CoordinatePlane: React.FC<CoordinatePlaneProps> = ({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isTrashHovered, setIsTrashHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<any>(null);
 
   const trashZone = {
@@ -43,11 +44,22 @@ export const CoordinatePlane: React.FC<CoordinatePlaneProps> = ({
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    if (!containerRef.current) return;
+    
+    const updateSize = () => {
+      if (containerRef.current) {
+        setDimensions({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight
+        });
+      }
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(containerRef.current);
+    updateSize(); // Initial call
+
+    return () => observer.disconnect();
   }, []);
 
   const handleMouseDown = (e: any) => {
@@ -239,7 +251,10 @@ export const CoordinatePlane: React.FC<CoordinatePlaneProps> = ({
   };
 
   return (
-    <div className={`w-full h-full bg-slate-50 overflow-hidden ${activeMode === 'pen' ? 'cursor-crosshair' : activeMode === 'eraser' ? 'cursor-not-allowed' : 'cursor-default'}`}>
+    <div 
+      ref={containerRef}
+      className={`w-full h-full bg-slate-50 overflow-hidden ${activeMode === 'pen' ? 'cursor-crosshair' : activeMode === 'eraser' ? 'cursor-not-allowed' : 'cursor-default'}`}
+    >
       <Stage
         width={dimensions.width}
         height={dimensions.height}

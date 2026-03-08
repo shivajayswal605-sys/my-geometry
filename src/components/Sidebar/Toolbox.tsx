@@ -11,13 +11,14 @@ import {
   Move,
   Pen,
   Eraser,
-  Circle as ProtractorIcon,
+  Circle,
   Minus,
   Shapes,
-  Circle,
   Square as SquareIcon,
   Triangle as TriangleIcon
 } from 'lucide-react';
+
+const ProtractorIcon = Circle;
 import { GridType, ToolMode } from '../../types';
 import { cn } from '../../lib/utils';
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Group, Arc, Line, Text, Circle } from 'react-konva';
-import { RotateCw } from 'lucide-react';
 
 interface ProtractorProps {
   id: string;
